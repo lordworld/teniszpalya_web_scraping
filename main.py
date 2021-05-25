@@ -1,0 +1,124 @@
+# Teniszpálya WebScraping APP.
+# The purpose of this app is to download the database of http://tenisz-palya.hu/. It collects all of the information
+# of the tennis courts in this site.
+
+import requests
+import bs4
+# import lxml
+# import package for excel export
+
+# Press Shift+F10 to execute it or replace it with your code.
+# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+
+main_url = "http://tenisz-palya.hu"
+
+def print_hi(name):
+    # Use a breakpoint in the code line below to debug your script.
+    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+
+def beautiful_html():
+    pass
+
+def get_value(num = 0, )
+
+def save_page(page):
+    court_page_url = "{main}{subpage}".format(main=main_url, subpage=page)
+    print(court_page_url)
+
+    plain_html = requests.get(court_page_url)
+    beautiful_court = bs4.BeautifulSoup(plain_html.text, 'lxml')
+
+    court_name = beautiful_court.select(".title_top.info h2")
+    court_post_code = beautiful_court.select(".gl-postcode")
+    court_city =  beautiful_court.select(".gl-city")
+    court_country = beautiful_court.select(".gl-county")
+    court_address = beautiful_court.select(".gl-address")
+
+    court_contact_name = beautiful_court.select(".contact_row.row_field_contact row_value")
+    court_contact_phone = beautiful_court.select(".contact_row.row_field_phone row_value")
+    court_contact_email = beautiful_court.select(".mail-web a")
+
+    court_introduction = beautiful_court.select(".intro_desc_content")
+    court_num = beautiful_court.select(".row_value.field_court_num")
+    court_num_summer = beautiful_court.select(".row_value.field_indoor_court_num_summ")
+    court_num_winter = beautiful_court.select(".row_value.field_indoor_court_num_wint")
+    court_material =  beautiful_court.select(".gl-value")
+    court_annual_open = beautiful_court.select(".row_value.field_open_year")
+    court_opening = beautiful_court.select(".row.row_field_open_note ")
+
+    print(court_contact_email, court_introduction, court_num, court_num_winter, court_num_summer, court_material)
+    #print(f" {type(court_name)}")
+
+    name = court_name[0].text
+
+    # TODO here WTF???
+    if (court_post_code != []):
+        post_code = court_post_code[0].text
+    else:
+        post_code = "NA"
+
+    city = court_city[0].text
+    country = court_country[0].text
+    address = court_address[0].text
+
+    # TODO ezzel valamit kene kezdeni, eleg ronda a kod......
+    if(court_contact_name != []):
+        contact_name = court_contact_name[0].text
+    else:
+        contact_name = "NA"
+
+    if(court_contact_name != []):
+        phone = court_contact_phone[0].text
+    else:
+        phone = "NA"
+    email = court_contact_email[0]['href'][6:]
+
+    introduction = court_introduction[0].text
+    number = court_num[0].text
+    number_summer = court_num_summer[0].text
+    number_winter = court_num_winter[0].text
+    #material = court_material[0].text
+    material = "TODO"
+    annual_open = "TODO"
+    opening = court_opening[0].text
+
+    print(name, post_code, city, country, address, contact_name, phone, email)
+    print(introduction, number, number_summer, number_winter, material, annual_open, opening)
+    print("\n")
+    #print(name[0].text)#, post_code[0].text, city[0].text, country[0].text, address[0].text, contact_name[0].text)
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    print_hi('PyCharm')
+
+    catalog_url = "http://tenisz-palya.hu/teniszpalya-katalogus?start="
+    page_still_valid = True
+    cnt = 0
+
+    while page_still_valid:
+        # create actual url
+        page_url = "{0}{1}".format(catalog_url, str(10 * cnt))
+        # page_url + main_url + str(10*cnt)
+        # print(page_url)
+
+        # request the html from the url
+        catalog_html = requests.get(page_url)
+        # print(catalog_html.text)
+
+        # make it beautiful - readable to the code
+        beautiful_catalog = bs4.BeautifulSoup(catalog_html.text, "lxml")
+        # print(beautiful_catalog)
+
+        court_list = beautiful_catalog.select('.title.Tips1')#['src']
+
+        print(f'Number of elements: {len(court_list)}' )
+        # valami = court_list["href"]
+        for court in court_list:
+            #print(court['href'])
+            save_page(court['href'])
+
+        # TODO do not break but make the go throught logic!!!
+        break
+
+
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
