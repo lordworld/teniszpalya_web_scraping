@@ -7,6 +7,8 @@ import bs4
 # import lxml
 # import package for excel export
 
+import Court
+
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
@@ -19,18 +21,39 @@ def print_hi(name):
 def beautiful_html():
     pass
 
-def get_value(num = 0, )
+def get_data(bs, data):
+    #print(type(bs))
+    if type(bs) is bs4.BeautifulSoup:
+        return bs.select(data)
+    else:
+        return -1
 
-def save_page(page):
+def get_value(variable):
+    """
+
+    :type variable: beautifulsoup list
+    """
+    #print(type(variable))#, len(variable))
+
+    if variable:
+        return variable[0].text
+    elif not variable:
+        return "NA"
+    else:
+        return -1
+
+
+def save_page(courts, page):
     court_page_url = "{main}{subpage}".format(main=main_url, subpage=page)
     print(court_page_url)
 
     plain_html = requests.get(court_page_url)
     beautiful_court = bs4.BeautifulSoup(plain_html.text, 'lxml')
+    print(type(beautiful_court))
 
-    court_name = beautiful_court.select(".title_top.info h2")
-    court_post_code = beautiful_court.select(".gl-postcode")
-    court_city =  beautiful_court.select(".gl-city")
+    court_name = get_data(beautiful_court, ".title_top.info h2")
+    court_post_code = get_data(beautiful_court, ".gl-postcode")
+    court_city =  get_data(beautiful_court, ".gl-city")
     court_country = beautiful_court.select(".gl-county")
     court_address = beautiful_court.select(".gl-address")
 
@@ -49,17 +72,15 @@ def save_page(page):
     print(court_contact_email, court_introduction, court_num, court_num_winter, court_num_summer, court_material)
     #print(f" {type(court_name)}")
 
-    name = court_name[0].text
+    #print(court_name, type(court_name))
+    name = get_value(court_name)
 
     # TODO here WTF???
-    if (court_post_code != []):
-        post_code = court_post_code[0].text
-    else:
-        post_code = "NA"
+    post_code = get_value(court_post_code)
 
-    city = court_city[0].text
-    country = court_country[0].text
-    address = court_address[0].text
+    city = get_value(court_city)
+    country = get_value(court_country)
+    address = get_value(court_address)
 
     # TODO ezzel valamit kene kezdeni, eleg ronda a kod......
     if(court_contact_name != []):
@@ -94,6 +115,7 @@ if __name__ == '__main__':
     catalog_url = "http://tenisz-palya.hu/teniszpalya-katalogus?start="
     page_still_valid = True
     cnt = 0
+    courts = []
 
     while page_still_valid:
         # create actual url
@@ -109,13 +131,13 @@ if __name__ == '__main__':
         beautiful_catalog = bs4.BeautifulSoup(catalog_html.text, "lxml")
         # print(beautiful_catalog)
 
-        court_list = beautiful_catalog.select('.title.Tips1')#['src']
+        court_list = get_data(beautiful_catalog, '.title.Tips1')#['src']
 
         print(f'Number of elements: {len(court_list)}' )
         # valami = court_list["href"]
         for court in court_list:
             #print(court['href'])
-            save_page(court['href'])
+            courts.append(Court(save_page(courts, court['href']))
 
         # TODO do not break but make the go throught logic!!!
         break
