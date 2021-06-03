@@ -31,5 +31,22 @@ class CourtClass:
         self.opening = opening
         self.others = args
 
+    def __str__(self):
+
+        info = (f'name: {self.name}\naddress: {self.post_code} {self.city}, {self.address}, {self.countryside}\n'
+            f'contact: {self.contact_name}, phone: {self.contact_phone}, email: {self.contact_email}\n'
+            f'introduction: {self.introduction}\nCourt number: {self.number},'
+            f'in winter: {self.number_winter} or in summer: {self.number_summer}\n'
+            f'material: {self.material}\nannual opening time: {self.annual_open}\n'
+            f'opening time: {self.opening}')
+
+        return info
+
+    def __len__(self):
+        return self.name
+
+    def __del__(self):
+        pass
+
     def valami(self):
         pass
