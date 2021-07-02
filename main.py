@@ -5,13 +5,14 @@
 import os
 import string
 
-import bs4
 import openpyxl
 import requests
+# import bs4
 from datetime import datetime
 from openpyxl.styles import Font
 
 from CourtClass import CourtClass
+from WebScraper import WebScraperClass
 
 # import lxml
 # import package for excel export
@@ -19,46 +20,14 @@ from CourtClass import CourtClass
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-main_url = "http://tenisz-palya.hu"
-
-
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
-def beautiful_html():
-    pass
 
 
-def get_raw_data(bs, data):
-    # print(type(bs))
-    if type(bs) is bs4.BeautifulSoup:
-        # print(bs.select(data))
-        return bs.select(data)
-    else:
-        return -1
 
-
-def get_value(variable, tag = [], num = 0):
-    """
-
-    :param tag: text
-    :type variable: beautifulsoup list
-    """
-    # print(type(variable))#, len(variable))
-
-    if variable and not tag:
-        numth_value = variable[num]
-        return numth_value.text.strip()
-    if variable and tag:
-        # print(variable[num][tag])
-        numth_value = variable[num][tag]
-        return numth_value.strip()
-    elif not variable:
-        return 0
-    else:
-        return -1
 
 
 def save_page(page):
@@ -152,6 +121,7 @@ def save_page(page):
 
 
 # Press the green button in the gutter to run the script.
+# Sorminta... meg lehet oldani tombbel
 def set_excel_size(sheet):
     sheet.column_dimensions['A'].width = 4
     sheet.column_dimensions['B'].width = 45
@@ -266,13 +236,14 @@ def export_to_excel(data):
 if __name__ == '__main__':
     print_hi('PyCharm')
 
+    page = WebScraperClass("http://tenisz-palya.hu")
+
     start = datetime.now()
     current_time = start.strftime("%Y:%m:%d:%H:%M")
-    print(current_time)
 
-    first_catalog_url = "/teniszpalya-katalogus?start=0"
-    last_catalog_url = "/teniszpalya-katalogus?start=760"
-    next_page = first_catalog_url
+    page.add_subpage(first_page = '/teniszpalya-katalogus?start=0',
+                    last_page = '/teniszpalya-katalogus?start=760')
+    next_page = page.subpage['first_page']
     # next_page = last_catalog_url
 
     page_still_valid = True
@@ -281,7 +252,7 @@ if __name__ == '__main__':
 
     while page_still_valid:
         # create actual url
-        page_url = "{0}{1}".format(main_url, next_page)#, str(10 * cnt))
+        page_url = "{0}{1}".format(page.url, next_page)#, str(10 * cnt))
         # page_url + main_url + str(10*cnt)
         print(page_url)
 
@@ -290,10 +261,10 @@ if __name__ == '__main__':
         # print(catalog_html.text)
 
         # make it beautiful - readable to the code
-        beautiful_catalog = bs4.BeautifulSoup(catalog_html.text, "lxml")
+        page_b4 = page.beautiful_html(catalog_html)
         # print(beautiful_catalog)
 
-        court_list = get_raw_data(beautiful_catalog, '.title.Tips1')  # ['src']
+        court_list = page.get_raw_data(page_b4, '.title.Tips1')  # ['src']
 
         print(f'Number of elements: {len(court_list)}')
         # valami = court_list["href"]
