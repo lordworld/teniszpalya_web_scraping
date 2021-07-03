@@ -76,6 +76,7 @@ def export_to_excel(data):
     now = datetime.now()
     current_time = now.strftime("%Y_%m_%d_%H_%M")
 
+    # Open the file, workbook, sheet and create the object
     excel_name = f"CourtData_{current_time}.xlsx"
     excel = ExcelManagerClass(excel_name)
     excel.create_sheet("Courts")
@@ -83,6 +84,7 @@ def export_to_excel(data):
 
     set_excel_header(excel)
 
+    # Fill excel with data
     for item in data:
         length = len(data)
         print(str(id) + " / " + str(length))
@@ -108,6 +110,7 @@ def export_to_excel(data):
         # excel.fill_excel_cell(f"O{row}", item.others)         # Egyéb
         excel.fill_excel_cell(f"P{row}", item.url)              # url link
 
+        # Color cells
         if id % 2:
             excel.color_cells(f"A{row}", f"P{row}")
         id += 1
@@ -135,6 +138,7 @@ if __name__ == '__main__':
     cnt = 0
     all_courts = []
 
+    # Iterate through all the pages
     while page_still_valid:
         # create actual url
         page.subpage['actual_page'] = "{0}{1}".format(page.url, page.subpage['next_page'])
@@ -144,6 +148,7 @@ if __name__ == '__main__':
 
         court_list = page.get_raw_data('.title.Tips1')
 
+        # Iterate throught all the courts
         print(f'Number of elements: {len(court_list)}')
         for court in court_list:
             print(court.text)
@@ -163,6 +168,7 @@ if __name__ == '__main__':
     
     export_to_excel(all_courts)
 
+    # Print runtime
     end = datetime.now()
     current_time = start.strftime("%Y:%m:%d:%H:%M")
     print(current_time)
