@@ -4,6 +4,7 @@ import openpyxl
 import os
 from openpyxl.styles import Font, Color
 from openpyxl.styles import PatternFill
+from LogHandler import LogHandlerClass
 
 class ExcelManagerClass:
 

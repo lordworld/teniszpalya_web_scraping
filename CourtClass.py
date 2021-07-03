@@ -1,4 +1,4 @@
-
+from LogHandler import LogHandlerClass
 
 class CourtClass:
 

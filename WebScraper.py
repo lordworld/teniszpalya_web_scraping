@@ -1,7 +1,6 @@
-
 import bs4
 import requests
-
+from LogHandler import LogHandlerClass
 
 class WebScraperClass:
 
@@ -83,11 +82,13 @@ class WebScraperClass:
     def format_page(self, url):
         try:
             plain_html = requests.get(url)
-        except:
+        except requests.ConnectionError:
             print(f'ERROR: Site is not reachable!!!\n'
                   f'URL is {url}\nMessage is: {plain_html}')
+        except:
+            print("Something is wrong!!!")
         else:
-            print("URL is reachable")
+            print("OK")
         self.make_html_beautiful(plain_html)
 
     # It can be run just after format_page function
