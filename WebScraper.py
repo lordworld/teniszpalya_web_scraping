@@ -4,8 +4,9 @@ from LogHandler import LogHandlerClass
 
 class WebScraperClass:
 
-    def __init__(self, url, *args, **kwargs):
+    def __init__(self, url, log = None, *args, **kwargs):
         self.url = url
+        self.log = log
         self.subpage = kwargs
 
     def __str__(self):
@@ -85,10 +86,14 @@ class WebScraperClass:
         except requests.ConnectionError:
             print(f'ERROR: Site is not reachable!!!\n'
                   f'URL is {url}\nMessage is: {plain_html}')
+            self.log.add_line(f'ERROR: Site is not reachable!!!\n'
+                  f'URL is {url}\nMessage is: {plain_html}')
         except:
             print("Something is wrong!!!")
+            self.log.add_line(f"Something is wrong!!!")
         else:
             print("OK")
+            self.log.add_line(f"OK")
         self.make_html_beautiful(plain_html)
 
     # It can be run just after format_page function

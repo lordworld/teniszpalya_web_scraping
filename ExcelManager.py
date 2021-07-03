@@ -8,9 +8,10 @@ from LogHandler import LogHandlerClass
 
 class ExcelManagerClass:
 
-    def __init__(self, name, path = os.getcwd()):
+    def __init__(self, name, log = None, path = os.getcwd()):
         self.name = name
         self.path = path
+        self.log = log
         self.workbook = openpyxl.Workbook()
 
     def create_sheet(self, name):

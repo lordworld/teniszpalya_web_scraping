@@ -80,7 +80,7 @@ def export_to_excel(data, log = None):
 
     # Open the file, workbook, sheet and create the object
     excel_name = f"CourtData_{current_time}.xlsx"
-    excel = ExcelManagerClass(excel_name)
+    excel = ExcelManagerClass(excel_name, log)
     excel.create_sheet("Courts")
     excel.remove_sheet_by_name('Sheet')
     log.add_line(f"Excel is opened. Name: {excel.name}, sheet: {excel.sheet}")
@@ -131,8 +131,8 @@ def export_to_excel(data, log = None):
 
 if __name__ == '__main__':
     print_hi('PyCharm')
-    page = WebScraperClass("http://tenisz-palya.hu")
     log = LogHandlerClass("Log")
+    page = WebScraperClass("http://tenisz-palya.hu", log)
 
     start = datetime.now()
     current_time = start.strftime("%Y:%m:%d:%H:%M")
