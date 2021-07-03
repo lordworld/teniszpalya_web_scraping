@@ -81,7 +81,13 @@ class WebScraperClass:
         return
 
     def format_page(self, url):
-        plain_html = requests.get(url)
+        try:
+            plain_html = requests.get(url)
+        except:
+            print(f'ERROR: Site is not reachable!!!\n'
+                  f'URL is {url}\nMessage is: {plain_html}')
+        else:
+            print("URL is reachable")
         self.make_html_beautiful(plain_html)
 
     # It can be run just after format_page function

@@ -131,7 +131,7 @@ if __name__ == '__main__':
                     last_page = '/teniszpalya-katalogus?start=760',
                     actual_page = '', next_page = '',
                     random = '/teniszpalya-katalogus?start=740')
-    page.subpage['next_page'] = page.subpage['random']
+    page.subpage['next_page'] = page.subpage['first_page']
     print("next page url: ", page.subpage['next_page'])
 
     page_still_valid = True
